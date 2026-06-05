@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  # Nombre personalizado para identificar este agente en el clúster
+  name: jenkins-agent-manuel-diaz
+  labels:
+    app: jenkins-agent-manuel-diaz
+spec:
+  containers:
+  - name: node-docker-kubectl
+    image: node:22-slim
+    # El comando 'cat' mantiene el pod vivo mientras el pipeline corre
+    command: ['cat']
+    tty: true
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run/docker.sock
+  volumes:
+  - name: docker-socket
+    hostPath:
+      # Este montaje es crítico para que el agente pueda hacer 'docker build'
+      path: /var/run/docker.sock

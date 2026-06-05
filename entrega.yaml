@@ -1,0 +1,82 @@
+# 1. Namespace personalizado
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-manuel-diaz
+---
+# 2. ConfigMap personalizado
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-manuel-diaz
+  namespace: ns-manuel-diaz
+data:
+  AMBIENTE: "produccion"
+---
+# 3. Secret personalizado
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret-manuel-diaz
+  namespace: ns-manuel-diaz
+type: Opaque
+stringData:
+  API_KEY: "mi-clave-super-secreta"
+---
+# 4. Deployment personalizado
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-manuel-diaz
+  namespace: ns-manuel-diaz
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-manuel-diaz
+  template:
+    metadata:
+      labels:
+        app: app-manuel-diaz
+    spec:
+      containers:
+      - name: lab3-container
+        # Imagen personalizada según requisito
+        image: manueldiazperalta/tarea-final:3.0.0
+        env:
+        - name: AMBIENTE
+          valueFrom:
+            configMapKeyRef:
+              name: config-manuel-diaz
+              key: AMBIENTE
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: secret-manuel-diaz
+              key: API_KEY
+        - name: PORT
+          value: "3000"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
+---
+# 5. Service personalizado (para poder hacer el curl)
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-manuel-diaz
+  namespace: ns-manuel-diaz
+spec:
+  selector:
+    app: app-manuel-diaz
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: NodePort

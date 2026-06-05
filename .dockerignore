@@ -1,0 +1,29 @@
+# Dependencias (Se instalan en el contenedor)
+node_modules
+pnpm-lock.yaml
+
+# Archivos de build
+dist
+*.log
+
+# Archivos de control de versiones
+.git
+.gitignore
+
+# Configuración y Secretos
+.env
+
+# Archivos de Orquestación y CI/CD (Van fuera de la imagen)
+Jenkinsfile
+Dockerfile
+# JSON (Ignorar todo, EXCEPTO los necesarios para compilar)
+*.json
+!package.json
+!tsconfig.json
+!tsconfig.build.json
+!nest-cli.json
+
+# Regla especial: Ignorar todos los yaml, EXCEPTO el lock de pnpm
+*.yaml
+!pnpm-lock.yaml
+
