@@ -10,7 +10,7 @@ pipeline {
         APP_NAME = 'tarea-final'
         TAG = 'manuel-diaz'
         APP_VERSION = '3.0.0' // Versión solicitada
-        // ID de credenciales
+        // ID de credenciales 
         DOCKER_CREDS = 'docker-hub-credentials'
     }
     stages {
@@ -53,9 +53,12 @@ pipeline {
         stage('Push') {
             steps {
                 container('node-docker-kubectl') {
-                    docker.withRegistry('', env.DOCKER_CREDS) {
-                        sh "docker push manueldiazperalta/${APP_NAME}:${TAG}"
-                        sh "docker push manueldiazperalta/${APP_NAME}:${APP_VERSION}"
+                    // CORRECCIÓN: El bloque script permite usar la API de docker de Jenkins
+                    script {
+                        docker.withRegistry('', env.DOCKER_CREDS) {
+                            sh "docker push manueldiazperalta/${APP_NAME}:${TAG}"
+                            sh "docker push manueldiazperalta/${APP_NAME}:${APP_VERSION}"
+                        }
                     }
                 }
             }
