@@ -18,19 +18,18 @@ pipeline {
             steps {
                 container('node-docker-kubectl') {
                     sh '''
-                        # Solo instalamos curl si no existe
-                        if ! command -v curl &> /dev/null; then
-                            apt-get update && apt-get install -y --no-install-recommends curl
-                        fi
-
-                        # Descarga directa de kubectl (binario puro)
+                        # 1. Descargar kubectl directamente (binario)
+                        echo "Descargando kubectl..."
                         curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
                         chmod +x kubectl
                         mv kubectl /usr/local/bin/
 
-                        # Nota: Si el contenedor base ya tiene docker (o si el socket 
-                        # del host basta), no hace falta instalar docker.io
-                        # Verifica si 'docker' existe antes de intentar instalarlo
+                        # 2. Descargar Docker CLI (binario) en lugar de instalar el motor completo
+                        # Esto es MUCHO más rápido que docker.io
+                        echo "Descargando Docker CLI..."
+                        curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-26.1.3.tgz | tar xz --strip-components=1 -C /usr/local/bin docker/docker
+                        
+                        echo "Herramientas listas."
                     '''
                 }
             }
