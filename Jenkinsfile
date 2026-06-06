@@ -14,12 +14,19 @@ pipeline {
         DOCKER_CREDS = 'docker-hub-credentials'
     }
     stages {
-        stage('Preparar Herramientas') {
+stage('Preparar Herramientas') {
             steps {
                 container('node-docker-kubectl') {
                     sh '''
+                        # Aseguramos que tenemos las herramientas necesarias
                         apt-get update
-                        apt-get install -y docker.io kubectl
+                        apt-get install -y --no-install-recommends docker.io curl ca-certificates
+                        
+                        # Instalación de kubectl v1.30 (versión estable)
+                        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+                        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' > /etc/apt/sources.list.d/kubernetes.list
+                        apt-get update
+                        apt-get install -y kubectl
                     '''
                 }
             }
