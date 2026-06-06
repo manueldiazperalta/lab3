@@ -20,7 +20,6 @@ spec:
       limits:
         memory: "2Gi"
         cpu: "1000m"
-    command: ['cat']
     tty: true
     volumeMounts:
     - name: docker-socket
