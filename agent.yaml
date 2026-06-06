@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: node-docker-kubectl
-    image: cimg/node:22.0
+    image: jenkins/inbound-agent:3355.v388858a_47b_33-3-jdk21
     # Asignamos recursos para evitar el error de memoria (OOMKilled)
     resources:
       requests:
