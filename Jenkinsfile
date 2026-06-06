@@ -18,10 +18,14 @@ pipeline {
             steps {
                 container('node-docker-kubectl') {
                     sh '''
+                        # 1. Instalar kubectl
                         curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
                         chmod +x kubectl
                         mv kubectl /usr/local/bin/
                 
+                        # 2. Instalar el cliente de Docker (¡Esto es lo que faltaba!)
+                        curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-26.1.3.tgz | tar xz --strip-components=1 -C /usr/local/bin docker/docker
+
                         # Verificación final
                         node -v
                         kubectl version --client
