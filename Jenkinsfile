@@ -18,18 +18,13 @@ pipeline {
             steps {
                 container('node-docker-kubectl') {
                     sh '''
-                        # 1. Descargar kubectl directamente (binario)
-                        echo "Descargando kubectl..."
+                        echo "Instalando kubectl..."
                         curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
                         chmod +x kubectl
                         mv kubectl /usr/local/bin/
-
-                        # 2. Descargar Docker CLI (binario) en lugar de instalar el motor completo
-                        # Esto es MUCHO más rápido que docker.io
-                        echo "Descargando Docker CLI..."
-                        curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-26.1.3.tgz | tar xz --strip-components=1 -C /usr/local/bin docker/docker
-                        
-                        echo "Herramientas listas."
+                
+                        # Verificación
+                        kubectl version --client
                     '''
                 }
             }
