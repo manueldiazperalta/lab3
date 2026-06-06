@@ -51,8 +51,8 @@ pipeline {
             steps {
                 container('node-docker-kubectl') {
                     script {
-                        // 1. Aseguramos permisos sobre el socket de Docker
-                        sh "chmod 666 /var/run/docker.sock"
+                        // 1. Evitar el error de conexión al demonio
+                        env.DOCKER_HOST = 'tcp://localhost:2375'
                         // 2. Construimos usando el nombre
                         sh "docker build -t manueldiazperalta/${APP_NAME}:${TAG} ."
                         // 3 Etiquetamos también con la versión 3.0.0
