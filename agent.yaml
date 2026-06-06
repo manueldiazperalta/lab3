@@ -9,6 +9,14 @@ spec:
   containers:
   - name: node-docker-kubectl
     image: cimg/node:22.0
+    # Asignamos recursos para evitar el error de memoria (OOMKilled)
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+      limits:
+        memory: "2Gi"
+        cpu: "1000m"
     # El comando 'cat' mantiene el pod vivo mientras el pipeline corre
     command: ['cat']
     tty: true
