@@ -14,19 +14,23 @@ pipeline {
         DOCKER_CREDS = 'docker-hub-credentials'
     }
     stages {
-stage('Preparar Herramientas') {
+        stage('Preparar Herramientas') {
             steps {
                 container('node-docker-kubectl') {
                     sh '''
-                        # Aseguramos que tenemos las herramientas necesarias
-                        apt-get update
-                        apt-get install -y --no-install-recommends docker.io curl ca-certificates
-                        
-                        # Instalación de kubectl v1.30 (versión estable)
-                        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-                        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' > /etc/apt/sources.list.d/kubernetes.list
-                        apt-get update
-                        apt-get install -y kubectl
+                        # Solo instalamos curl si no existe
+                        if ! command -v curl &> /dev/null; then
+                            apt-get update && apt-get install -y --no-install-recommends curl
+                        fi
+
+                        # Descarga directa de kubectl (binario puro)
+                        curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
+                        mv kubectl /usr/local/bin/
+
+                        # Nota: Si el contenedor base ya tiene docker (o si el socket 
+                        # del host basta), no hace falta instalar docker.io
+                        # Verifica si 'docker' existe antes de intentar instalarlo
                     '''
                 }
             }
