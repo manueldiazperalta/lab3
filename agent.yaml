@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: node-docker-kubectl
-    image: node:22-slim
+    image: cimg/node:22.0
     # El comando 'cat' mantiene el pod vivo mientras el pipeline corre
     command: ['cat']
     tty: true
