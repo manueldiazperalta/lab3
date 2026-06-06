@@ -18,14 +18,13 @@ pipeline {
             steps {
                 container('node-docker-kubectl') {
                     sh '''
-                        # Instalar nodejs de forma rápida y limpia
-                        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-                        apt-get install -y nodejs
-                
-                        # Instalar kubectl
                         curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
                         chmod +x kubectl
                         mv kubectl /usr/local/bin/
+                
+                        # Verificación final
+                        node -v
+                        kubectl version --client
                     '''
                 }
             }
